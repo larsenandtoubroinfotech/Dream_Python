@@ -5,7 +5,8 @@ import subprocess
 import shutil
 import image_in_registry
 app_file = sys.argv[1]
-file_extension = app_file.split(".")[1]
+app_file_len = len(app_file.split('.'))
+file_extension = app_file.split('.')[app_file_len-1]
 service_name = app_file.split(".")[0]
 registry_url = "https://citi.docker.com:5000/v2/_catalog"
 apache_repository_url = "http://10.101.3.141/package_repository/debian/"
@@ -37,8 +38,9 @@ def java_application(app_file):
             image_name = java_software+"_"+apache_tomcat
     image_status = image_in_registry.image_search(registry_url, image_name)
     if image_status == "present":
-        subprocess.call(["python", "container_creation.py", service_name])
+        subprocess.call(["python", scripts_path+"/container_creation.py", service_name, image_name])
     else:
+        image_name = "citi.docker.com:5000/"+image_name
         shutil.copy("/home/shefali/docker/java_tomcat/dockerfile_base", ".")
         tomcat_package = subprocess.check_output(["python", scripts_path+"/phtn_test.py", apache_repository_url, apache_tomcat])
         tomcat_package = tomcat_package.rstrip()
@@ -47,6 +49,7 @@ def java_application(app_file):
         java_package = java_package.rstrip()
         subprocess.call(["python", scripts_path+"/replace_words.py", java_package, "@jdk_package", "dockerfile_base"])
         subprocess.call(["docker", "build", "-f", "dockerfile_base", "-t", image_name, "."])
-        subprocess.call(["python", ""+scripts_path+"/container_creation.py", service_name])
+        subprocess.call(["docker", "push", image_name])
+        subprocess.call(["python", scripts_path+"/container_creation.py", service_name, image_name])
 if file_extension == "war":
     java_application(app_file)
