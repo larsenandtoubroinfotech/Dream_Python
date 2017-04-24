@@ -30,7 +30,7 @@ def java_application(app_file):
     for line in major_version:
         if "major" in line:
             major_version = line.rstrip().split(":")[1].split(" ")[1]
-    for line in open('/home/shefali/scripts/jdk_version'):
+    for line in open(scripts_path+'/jdk_version'):
         if major_version in line:
             java_version = line.split(":")[1].split(".")[1].rstrip()
             apache_tomcat = "apache-tomcat-"+java_version
