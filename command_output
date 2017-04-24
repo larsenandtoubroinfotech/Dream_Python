@@ -1,0 +1,4 @@
+ID            NAME                 REPLICAS  IMAGE                                     COMMAND
+0ho56jwi1t57  samplerestproject-0  1/1       citi.docker.com:5000/samplerestproject-0  
+6i4hdn45k825  angularjavaapp_1     1/1       citi.docker.com:5000/angularjavaapp       
+81617jfgxpam  angularjavaapp       1/1       citi.docker.com:5000/angularjavaapp       
